@@ -44,11 +44,6 @@
 - **PostgreSQL**
 - Version: `11.22`
 
-To create schema automatically:
-```bash
-npx sequelize-cli db:migrate
-```
-
 
 - **## How to Run**
 1. Clone Repo
