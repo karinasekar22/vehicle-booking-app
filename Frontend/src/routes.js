@@ -1,12 +1,10 @@
 // import
-import React, { Component }  from 'react';
 import Dashboard from "views/Dashboard/Dashboard.js";
-import Tables from "views/Dashboard/Tables.js";
-import Billing from "views/Dashboard/Billing.js";
-import RTLPage from "views/RTL/RTLPage.js";
-import Profile from "views/Dashboard/Profile.js";
 import SignIn from "views/Pages/SignIn.js";
-import SignUp from "views/Pages/SignUp.js";
+import ManageDriver from "views/Dashboard/ManageDriver";
+import ManageVehicle from "views/Dashboard/ManageVehicle";
+import CreateBooking from "views/Dashboard/CreateBooking";
+import DashboardApprover from "views/Approval/Approval";
 
 var dashRoutes = [
   {
@@ -15,22 +13,28 @@ var dashRoutes = [
     component: Dashboard,
     layout: "/admin",
   },
+  {
+    path: "/dashboard",
+    name: "Approval",
+    component: DashboardApprover,
+    layout: "/approver",
+  },
     {
     path: "/booking",
-    name: "Create Booking",
-    component: Tables,
+    name: "Manage Booking",
+    component: CreateBooking,
     layout: "/admin",
   },
   {
     path: "/driver",
     name: "Manage Driver",
-    component: Tables,
+    component: ManageDriver,
     layout: "/admin",
   },
   {
     path: "/vehicle",
     name: "Manage Vehicle",
-    component: Billing,
+    component: ManageVehicle,
     layout: "/admin",
   },
   {
@@ -42,12 +46,6 @@ var dashRoutes = [
         path: "/signin",
         name: "Sign In",
         component: SignIn,
-        layout: "/auth",
-      },
-      {
-        path: "/signup",
-        name: "Sign Up",
-        component: SignUp,
         layout: "/auth",
       },
     ],

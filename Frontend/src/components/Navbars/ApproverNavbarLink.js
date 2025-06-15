@@ -1,7 +1,7 @@
 import {
-  Box,
   Flex,
   Stack,
+  Box,
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -14,11 +14,13 @@ import routes from "routes.js";
 
 export default function HeaderLinks(props) {
   const { fixed, scrolled, secondary, ...rest } = props;
-
   const { colorMode } = useColorMode();
 
-  // Filter routes untuk layout "/admin"
-  const adminRoutes = routes.filter(route => route.layout === "/admin" || (route.views && route.views.some(v => v.layout === "/admin")));
+  // Filter routes hanya yang layout = "/approver"
+  const approverRoutes = routes.filter(route => route.layout === "/approver" || (route.views && route.views.some(v => v.layout === "/approver")));
+
+  // Jika ada kategori atau collapse, Anda bisa buat fungsi filter rekursif jika perlu,
+  // tapi jika struktur sederhana, filter di atas sudah cukup.
 
   // Chakra Color Mode
   let navbarIcon =
@@ -60,7 +62,7 @@ export default function HeaderLinks(props) {
         }
         colorMode={colorMode}
         secondary={secondary}
-        routes={adminRoutes}
+        routes={approverRoutes}
       />
     </Flex>
   );

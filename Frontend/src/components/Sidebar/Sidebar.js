@@ -12,45 +12,42 @@ import {
   Flex,
   Stack,
   Text,
-  useColorMode,
   useColorModeValue,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
 import {
   renderThumbDark,
   renderThumbLight,
   renderTrack,
-  renderTrackRTL,
   renderView,
-  renderViewRTL
 } from "components/Scrollbar/Scrollbar";
 import { HSeparator } from "components/Separator/Separator";
 import React from "react";
 import { Scrollbars } from "react-custom-scrollbars";
 import { NavLink, useLocation } from "react-router-dom";
 
-
-
 // FUNCTIONS
 
 function Sidebar(props) {
-  // to check for active links and opened collapses
-  let location = useLocation();
-  // this is for the rest of the collapses
-  const [state, setState] = React.useState({});
+  const location = useLocation();
   const mainPanel = React.useRef();
   let variantChange = "0.2s linear";
-  // verifies if routeName is the one active (in browser input)
-  const activeRoute = (routeName) => {
-    return location.pathname === routeName ? "active" : "";
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
+
+    window.location.href = "/auth/signin";
   };
-  const { colorMode } = useColorMode;
+
+  // verifies if routeName is the one active (in browser input)
+  const activeRoute = (routeName) =>
+    location.pathname === routeName ? "active" : "";
+
   // this function creates the links and collapses that appear in the sidebar (left menu)
-  const { sidebarVariant } = props;
   const createLinks = (routes) => {
     // Chakra Color Mode
     let activeBg = useColorModeValue("white", "navy.700");
-    let inactiveBg = useColorModeValue("white", "navy.700");
     let activeColor = useColorModeValue("gray.700", "white");
     let inactiveColor = useColorModeValue("gray.400", "gray.400");
     let sidebarActiveShadow = "0px 7px 11px rgba(0, 0, 0, 0.04)";
@@ -59,29 +56,20 @@ function Sidebar(props) {
         return null;
       }
       if (prop.category) {
-        var st = {};
-        st[prop["state"]] = !state[prop.state];
         return (
-          <>
+          <React.Fragment key={prop.name}>
             <Text
               color={activeColor}
               fontWeight="bold"
-              mb={{
-                xl: "6px",
-              }}
+              mb={{ xl: "6px" }}
               mx="auto"
-              ps={{
-                sm: "10px",
-                xl: "16px",
-              }}
+              ps={{ sm: "10px", xl: "16px" }}
               py="12px"
             >
-              {document.documentElement.dir === "rtl"
-                ? prop.rtlName
-                : prop.name}
+              {prop.name}
             </Text>
             {createLinks(prop.views)}
-          </>
+          </React.Fragment>
         );
       }
       return (
@@ -94,16 +82,9 @@ function Sidebar(props) {
               boxShadow={sidebarActiveShadow}
               bg={activeBg}
               transition={variantChange}
-              mb={{
-                xl: "6px",
-              }}
-              mx={{
-                xl: "auto",
-              }}
-              ps={{
-                sm: "10px",
-                xl: "16px",
-              }}
+              mb={{ xl: "6px" }}
+              mx={{ xl: "auto" }}
+              ps={{ sm: "10px", xl: "16px" }}
               py="12px"
               borderRadius="15px"
               _hover="none"
@@ -119,9 +100,7 @@ function Sidebar(props) {
             >
               <Flex>
                 <Text color={activeColor} my="auto" fontSize="sm">
-                  {document.documentElement.dir === "rtl"
-                    ? prop.rtlName
-                    : prop.name}
+                  {prop.name}
                 </Text>
               </Flex>
             </Button>
@@ -131,17 +110,10 @@ function Sidebar(props) {
               justifyContent="flex-start"
               alignItems="center"
               bg="transparent"
-              mb={{
-                xl: "6px",
-              }}
-              mx={{
-                xl: "auto",
-              }}
+              mb={{ xl: "6px" }}
+              mx={{ xl: "auto" }}
               py="12px"
-              ps={{
-                sm: "10px",
-                xl: "16px",
-              }}
+              ps={{ sm: "10px", xl: "16px" }}
               borderRadius="15px"
               _hover="none"
               w="100%"
@@ -156,9 +128,7 @@ function Sidebar(props) {
             >
               <Flex>
                 <Text color={inactiveColor} my="auto" fontSize="sm">
-                  {document.documentElement.dir === "rtl"
-                    ? prop.rtlName
-                    : prop.name}
+                  {prop.name}
                 </Text>
               </Flex>
             </Button>
@@ -167,15 +137,15 @@ function Sidebar(props) {
       );
     });
   };
-  const { logo, routes } = props;
 
-  var links = <>{createLinks(routes)}</>;
+  const { logo, routes } = props;
+  const links = <>{createLinks(routes)}</>;
+
   //  BRAND
-  //  Chakra Color Mode
   let sidebarBg = useColorModeValue("white", "navy.800");
   let sidebarRadius = "20px";
   let sidebarMargins = "0px";
-  var brand = (
+  const brand = (
     <Box pt={"25px"} mb="12px">
       {logo}
       <HSeparator my="26px" />
@@ -191,12 +161,8 @@ function Sidebar(props) {
           transition={variantChange}
           w="260px"
           maxW="260px"
-          ms={{
-            sm: "16px",
-          }}
-          my={{
-            sm: "16px",
-          }}
+          ms={{ sm: "16px" }}
+          my={{ sm: "16px" }}
           h="calc(100vh - 32px)"
           ps="20px"
           pe="20px"
@@ -206,49 +172,47 @@ function Sidebar(props) {
         >
           <Scrollbars
             autoHide
-            renderTrackVertical={
-              document.documentElement.dir === "rtl"
-                ? renderTrackRTL
-                : renderTrack
-            }
+            renderTrackVertical={renderTrack}
             renderThumbVertical={useColorModeValue(
               renderThumbLight,
               renderThumbDark
             )}
-            renderView={
-              document.documentElement.dir === "rtl"
-                ? renderViewRTL
-                : renderView
-            }
+            renderView={renderView}
           >
             <Box>{brand}</Box>
             <Stack direction="column" mb="40px">
               <Box>{links}</Box>
             </Stack>
+            <Button
+              onClick={handleLogout}
+              colorScheme="red"
+              width="50%"
+              mb="20px"
+              alignSelf="start"
+            >
+              Logout
+            </Button>
           </Scrollbars>
         </Box>
       </Box>
     </Box>
   );
 }
-
-// FUNCTIONS
-
+export default Sidebar;
+// SidebarResponsive
 export function SidebarResponsive(props) {
-  // to check for active links and opened collapses
-  let location = useLocation();
-  const { logo, routes, colorMode, hamburgerColor, ...rest } = props;
-
-  // this is for the rest of the collapses
-  const [state, setState] = React.useState({});
+  const location = useLocation();
+  const { logo, routes, hamburgerColor, ...rest } = props;
   const mainPanel = React.useRef();
-  // verifies if routeName is the one active (in browser input)
-  const activeRoute = (routeName) => {
-    return location.pathname === routeName ? "active" : "";
+  const activeRoute = (routeName) =>
+    location.pathname === routeName ? "active" : "";
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
+    window.location.href = "/auth/signin";
   };
-  // Chakra Color Mode
+
   let activeBg = useColorModeValue("white", "navy.700");
-  let inactiveBg = useColorModeValue("white", "navy.700");
   let activeColor = useColorModeValue("gray.700", "white");
   let inactiveColor = useColorModeValue("gray.400", "white");
   let sidebarActiveShadow = useColorModeValue(
@@ -257,36 +221,26 @@ export function SidebarResponsive(props) {
   );
   let sidebarBackgroundColor = useColorModeValue("white", "navy.800");
 
-  // this function creates the links and collapses that appear in the sidebar (left menu)
   const createLinks = (routes) => {
     return routes.map((prop, key) => {
       if (prop.redirect) {
         return null;
       }
       if (prop.category) {
-        var st = {};
-        st[prop["state"]] = !state[prop.state];
         return (
-          <>
+          <React.Fragment key={prop.name}>
             <Text
               color={activeColor}
               fontWeight="bold"
-              mb={{
-                xl: "6px",
-              }}
+              mb={{ xl: "6px" }}
               mx="auto"
-              ps={{
-                sm: "10px",
-                xl: "16px",
-              }}
+              ps={{ sm: "10px", xl: "16px" }}
               py="12px"
             >
-              {document.documentElement.dir === "rtl"
-                ? prop.rtlName
-                : prop.name}
+              {prop.name}
             </Text>
             {createLinks(prop.views)}
-          </>
+          </React.Fragment>
         );
       }
       return (
@@ -298,16 +252,9 @@ export function SidebarResponsive(props) {
               alignItems="center"
               bg={activeBg}
               boxShadow={sidebarActiveShadow}
-              mb={{
-                xl: "6px",
-              }}
-              mx={{
-                xl: "auto",
-              }}
-              ps={{
-                sm: "10px",
-                xl: "16px",
-              }}
+              mb={{ xl: "6px" }}
+              mx={{ xl: "auto" }}
+              ps={{ sm: "10px", xl: "16px" }}
               py="12px"
               borderRadius="15px"
               _hover="none"
@@ -323,9 +270,7 @@ export function SidebarResponsive(props) {
             >
               <Flex>
                 <Text color={activeColor} my="auto" fontSize="sm">
-                  {document.documentElement.dir === "rtl"
-                    ? prop.rtlName
-                    : prop.name}
+                  {prop.name}
                 </Text>
               </Flex>
             </Button>
@@ -335,17 +280,10 @@ export function SidebarResponsive(props) {
               justifyContent="flex-start"
               alignItems="center"
               bg="transparent"
-              mb={{
-                xl: "6px",
-              }}
-              mx={{
-                xl: "auto",
-              }}
+              mb={{ xl: "6px" }}
+              mx={{ xl: "auto" }}
               py="12px"
-              ps={{
-                sm: "10px",
-                xl: "16px",
-              }}
+              ps={{ sm: "10px", xl: "16px" }}
               borderRadius="15px"
               _hover="none"
               w="100%"
@@ -360,9 +298,7 @@ export function SidebarResponsive(props) {
             >
               <Flex>
                 <Text color={inactiveColor} my="auto" fontSize="sm">
-                  {document.documentElement.dir === "rtl"
-                    ? prop.rtlName
-                    : prop.name}
+                  {prop.name}
                 </Text>
               </Flex>
             </Button>
@@ -372,21 +308,18 @@ export function SidebarResponsive(props) {
     });
   };
 
-  var links = <>{createLinks(routes)}</>;
+  const links = <>{createLinks(routes)}</>;
 
-  //  BRAND
-
-  var brand = (
+  const brand = (
     <Box pt={"35px"} mb="8px">
       {logo}
       <HSeparator my="26px" />
     </Box>
   );
 
-  // SIDEBAR
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
-  // Color variables
+
   return (
     <Flex
       display={{ sm: "flex", xl: "none" }}
@@ -403,19 +336,15 @@ export function SidebarResponsive(props) {
       <Drawer
         isOpen={isOpen}
         onClose={onClose}
-        placement={document.documentElement.dir === "rtl" ? "right" : "left"}
+        placement="left"
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
         <DrawerContent
           w="250px"
           maxW="250px"
-          ms={{
-            sm: "16px",
-          }}
-          my={{
-            sm: "16px",
-          }}
+          ms={{ sm: "16px" }}
+          my={{ sm: "16px" }}
           borderRadius="16px"
           bg={sidebarBackgroundColor}
         >
@@ -429,6 +358,14 @@ export function SidebarResponsive(props) {
               <Stack direction="column" mb="40px">
                 <Box>{links}</Box>
               </Stack>
+              <Button
+                onClick={handleLogout}
+                colorScheme="red"
+                width="50%"
+                mb="20px"
+              >
+                Logout
+              </Button>
             </Box>
           </DrawerBody>
         </DrawerContent>
@@ -437,4 +374,4 @@ export function SidebarResponsive(props) {
   );
 }
 
-export default Sidebar;
+

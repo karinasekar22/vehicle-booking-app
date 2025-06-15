@@ -1,4 +1,5 @@
-const { Booking, Approval, User, Vehicle, Driver } = require("../models");
+const { Booking, Approval, User, Vehicle, Driver, Sequelize } = require("../models");
+const {Op} = Sequelize;
 const logAction = require("../utils/logAction");
 
 exports.createBooking = async (req, res) => {
@@ -74,7 +75,7 @@ exports.getAllBookings = async (req, res) => {
         },
         {
           model: Vehicle,
-          attributes: ['id', 'plate_number', 'type', 'status']
+          attributes: ['id', 'name', 'plate_number', 'type', 'status']
         },
         {
           model: Driver,
@@ -100,15 +101,54 @@ exports.getBookingUsageStats = async (req, res) => {
   try {
     const usage = await Booking.findAll({
       attributes: [
-        [Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('start_date')), 'month'],
-        [Sequelize.fn('COUNT', Sequelize.col('id')), 'total_booking']
+        'vehicle_id',
+        [Sequelize.fn('COUNT', Sequelize.col('Booking.id')), 'total']
       ],
-      group: [Sequelize.fn('DATE_TRUNC', 'monnt'.Sequelize.col('start_date'))],
-      order: [[Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('start_date')), 'ASC']]
+      include: {
+        model: Vehicle,
+        attributes: ['name']
+      },
+      group: ['vehicle_id', 'Vehicle.id'],
+      order: [[Sequelize.fn('COUNT', Sequelize.col('Booking.id')), 'DESC']]
     });
-    res.json({ data: usage });
+    const result = usage.map(item => ({
+      vehicle: item.Vehicle.name,
+      total: parseInt(item.dataValues.total),
+    }));
+    res.json({ data: result });
   } catch (err) {
     console.error("Dashboard usage error: ", err);
-    res.status(500).json({ message: "Failed to fetch booking usage!" });
+    res.status(500).json({ message: "Failed to fetch vehicle usage!" });
+  }
+};
+
+exports.deleteById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const booking = await Booking.findByPk(id);
+    if (!booking)
+      return res.status(404).json({ message: "Booking id not found" });
+
+    await booking.destroy();
+    res.status(200).json({ message: "Booking deleted!" });
+  } catch (err) {
+    console.error("Failed to delete", err);
+    res.status(500).json({ message: "Failed to delete booking date" });
+  }
+};
+
+exports.updateById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const booking = await Booking.findByPk(id);
+    if (!booking)
+      return res.status(404).json({ message: "Booking id not found" });
+
+    const updatedBooking = req.body;
+    await booking.update(updatedBooking);
+    res.status(200).json({ message: "Booking updated", booking });
+  } catch (err) {
+    console.error("Failed to update", err);
+    res.status(500).json({ message: "Failed to update booking" });
   }
 };

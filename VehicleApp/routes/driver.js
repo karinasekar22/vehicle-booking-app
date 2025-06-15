@@ -2,8 +2,13 @@ const express = require('express');
 const router = express.Router();
 const driverController = require('../controllers/driverController');
 const { verifyToken } = require('../middlewares/auth');
-const { checkRole } = require('../middlewares/role');
 
-router.post('/', verifyToken, checkRole('admin'), driverController.createDriver);
+router.post('/', verifyToken, driverController.createDriver);
+
+router.get('/', verifyToken, driverController.getAllDriver);
+
+router.put('/:id', verifyToken, driverController.updateDriverById);
+
+router.delete('/:id', verifyToken, driverController.deletedriverById);
 
 module.exports = router;
