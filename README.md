@@ -47,26 +47,43 @@
 To create schema automatically:
 ```bash
 npx sequelize-cli db:migrate
+```
 
 
-## How to Run
+- **## How to Run**
 1. Clone Repo
-git clone https://github.com/karinasekar22/vvehicle-booking-app.git
-cd VehicleApp
-2. Install Backend Dependencies
-npm install
-3. Create .env file
-PORT=5000
-DATABASE_URL=postgres://user:password@localhost:5432/yourdb
-JWT_SECRET=your_jwt_secret
-4. (Optional) To populate with sample data:
-node seed.js
-5. Run Backend
- npm run dev
-6. Setup Frontend
-cd Frontend
-npm install
-npm start
+```bash
+git clone https://github.com/karinasekar22/vehicle-booking-app.git
 
+cd VehicleApp
+```
+2. Install Backend Dependencies
+```bash
+npm install
+```
+3. Create .env file
+```bash
+PORT=5000
+
+DATABASE_URL=postgres://user:password@localhost:5432/yourdb
+
+JWT_SECRET=your_jwt_secret
+```
+4. (Optional) To populate with sample data:
+```bash
+node seed.js
+```
+5. Run Backend
+```bash
+ npm run dev
+```
+6. Setup Frontend
+```bash
+cd Frontend
+
+npm install
+
+npm start
+```
 
 
