@@ -63,11 +63,10 @@ npm install
 ```
 3. Create .env file
 ```bash
-PORT=5000
-
-DATABASE_URL=postgres://user:password@localhost:5432/yourdb
-
-JWT_SECRET=your_jwt_secret
+DB_NAME=your_db
+DB_USER=you
+DB_PASSWORD=your_password
+DB_HOST=localhost
 ```
 4. (Optional) To populate with sample data:
 ```bash
