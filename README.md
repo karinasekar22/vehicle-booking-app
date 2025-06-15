@@ -70,6 +70,7 @@ DB_HOST=localhost
 ```
 4. (Optional) To populate with sample data:
 ```bash
+npm install bcrypt 
 node seed.js
 ```
 5. Run Backend
