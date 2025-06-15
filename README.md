@@ -62,6 +62,8 @@ DB_NAME=your_db
 DB_USER=you
 DB_PASSWORD=your_password
 DB_HOST=localhost
+JWT_SECRET=your_secret
+
 ```
 4. (Optional) To populate with sample data:
 ```bash
