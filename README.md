@@ -82,5 +82,6 @@ npm install
 
 npm start
 ```
+> ⚠️ *Catatan*: PDM dan Use Case diagram tidak sempat diselesaikan karena keterbatasan waktu. Namun struktur data dan relasi antar entitas telah diterapkan di dalam folder `/models`. Dapat dikembangkan lebih lanjut jika dibutuhkan.
 
 
